@@ -1,50 +1,43 @@
 # test-manager-library-3239188-infra
 
-> **Prueba técnica · Ficha ADSO 3239188**
-> Horario: **jueves 5 de noviembre de 2026, de 7:00 p. m. a 11:00 p. m.** (hora Colombia). Entrega a las **11:00 p. m.**
+> **Prueba técnica · Ficha ADSO 3239188**  
+> Infraestructura y contenedor de base de datos para *Manager Library*.
 
-Este repositorio es la **infraestructura** de *Manager Library*: contenedores, red, volúmenes y el motor de base de datos vacío. **Empieza vacío a propósito**: se construye en el fork de cada aprendiz.
+Este repositorio contiene la configuración de infraestructura para levantar el motor de base de datos PostgreSQL 16 aislado y vacío, respetando el **Artículo V de la Constitución** (`constitution.md`).
 
-## Instrucciones
+---
 
-Cada aprendiz debe **crear el fork** de los seis repositorios del proyecto y **resolver el proyecto
-con el spec planteado**.
+## Requisitos
+* Docker y Docker Compose instalados.
 
-1. Hacer fork, a su cuenta de GitHub, de cada repositorio de la tabla del final.
-2. Leer el spec en [`test-manager-library-3239188-docs`](https://github.com/code-sena/test-manager-library-3239188-docs).
-   Se entrega en dos versiones: `spec-python/` y `spec-.net/`.
-3. Desarrollar en los forks.
+---
 
-## El reto se desarrolla con React y PHP (Laravel)
+## Archivos de Infraestructura
 
-El spec está escrito para Python y para .NET, pero el reto **no** se hace en esos lenguajes:
+* **`docker-compose.yml`**: Orquestación del servicio PostgreSQL 16 con puerto expuesto `5432`, zona horaria `UTC`, volumen persistente y verificación de salud (*healthcheck*).
+* **`init-schema.sql`**: Script de inicialización que asegura la existencia del esquema `library` sin crear tablas (cero `CREATE TABLE`).
+* **`.env.example`**: Variables de conexión predeterminadas para los servicios clientes (API de Laravel).
 
-| Capa | Tecnología del reto |
-|---|---|
-| Frontend | React |
-| Backend | PHP con Laravel |
+---
 
-Lo que el spec define sobre el negocio —historias, criterios de aceptación, reglas, contrato de la
-API, modelo de datos— se respeta. Lo que define sobre la tecnología se traduce a React y Laravel.
+## Instrucciones de Uso
 
-## La prueba no consiste en escribir el código
+### 1. Iniciar el servicio de base de datos
+```bash
+docker compose up -d
+```
 
-El propósito principal es ver la **capacidad de desempeño con SDD** (*Spec-Driven Development*,
-desarrollo guiado por especificación): cómo se lee, se interpreta y se aplica una especificación
-para llevarla a un stack distinto. El código es el medio, no el fin.
+### 2. Verificar que el contenedor esté corriendo y saludable
+```bash
+docker compose ps
+```
 
-## Entrega
+### 3. Detener el servicio
+```bash
+docker compose down
+```
 
-Cuenta lo que quede **subido a los forks antes de las 11:00 p. m.** Lo que llegue después no se revisa.
-No hay prórroga: suban avances parciales con commits pequeños durante la prueba.
-
-## Los seis repositorios
-
-| Repositorio | Qué va ahí |
-|---|---|
-| [`test-manager-library-3239188-docs`](https://github.com/code-sena/test-manager-library-3239188-docs) | El spec: `spec-python/` y `spec-.net/` |
-| [`test-manager-library-3239188-api`](https://github.com/code-sena/test-manager-library-3239188-api) | Backend en PHP (Laravel) |
-| [`test-manager-library-3239188-app`](https://github.com/code-sena/test-manager-library-3239188-app) | Frontend en React |
-| [`test-manager-library-3239188-page`](https://github.com/code-sena/test-manager-library-3239188-page) | Sitio público estático de presentación |
-| [`test-manager-library-3239188-infra`](https://github.com/code-sena/test-manager-library-3239188-infra) | Contenedores, red, volúmenes y motor de base de datos vacío |
-| [`test-manager-library-3239188-tool`](https://github.com/code-sena/test-manager-library-3239188-tool) | Utilidades: sembrador de datos de demostración |
+### 4. Detener y limpiar volúmenes (si se requiere reiniciar desde cero)
+```bash
+docker compose down -v
+```
